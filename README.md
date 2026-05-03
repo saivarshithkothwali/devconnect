@@ -1,282 +1,148 @@
-🧑‍💻 devConnect - A Networking Platform for Developers
+🧑‍💻 devConnect
 
-devConnect is a full-stack web application designed to connect developers from around the world. Inspired by modern social platforms, it allows users to create profiles, showcase their skills, and connect with peers for collaboration, networking, and knowledge sharing. The application features real-time chat, a robust backend, and a responsive, modern front-end.
+Backend-focused developer networking platform with real-time communication, secure authentication, and scalable API design.
 
-🚀 Live Demo & Links
-   
-   https://drive.google.com/file/d/1hwHNnJKuHPHXvMTDb-F0tuDpdzoJsnVs/view?usp=sharing
-   
-   https://thedevconnect.in/login
 
-✨ Key Features
-    
--> User Authentication: Secure user registration and login system using JWT (JSON Web Tokens) to protect user data and secure API endpoints.
+🚀 Overview
 
--> Developer Profiles: Users can create and customize their profiles, adding skills, experience, and social links.
+devConnect is a production-style backend project demonstrating real-world backend engineering patterns including authentication, real-time systems, database design, security, and API architecture.
 
--> Real-Time Chat: Instant messaging functionality built with Socket.io allows developers to communicate and collaborate in real time.
+Built using Node.js and Express, with MongoDB for persistence and Socket.io for real-time communication. Deployed on AWS EC2 with Nginx as a reverse proxy.
 
--> Automated Email Notifications: Integrated with Amazon SES (Simple Email Service) for sending automated welcome emails and notifications.
 
--> Responsive Design: A clean and intuitive user interface built with React and styled with Tailwind CSS that works seamlessly across all devices.
+🏗️ Architecture
 
--> Cloud Deployment: The application is deployed on AWS EC2, ensuring scalability and reliability.
+Client → Nginx → Express (Node.js) → MongoDB Atlas
+                  ↓
+                Amazon SES
 
-🛠️ Tech Stack & Architecture
 
--> This project is a full-stack MERN application with a focus on modern development practices.
 
-Front-End:
+ ✨ Key Features
 
--> React.js (with Vite for a faster build process)
+ 🔐 Authentication & Security
 
--> Redux Toolkit for efficient state management
+* Stateless JWT authentication using HttpOnly cookies
+* bcrypt password hashing with salting
+* Protection against XSS, CSRF, and user enumeration
+* Field-level update restrictions to prevent mass assignment
+* Defense-in-depth validation (API-level + schema-level)
 
--> Tailwind CSS for utility-first styling
+---
 
-Back-End:
+ ⚙️ API Design & Middleware
 
--> Node.js & Express.js for building the RESTful API
+* Modular route architecture using `express.Router`
+* Middleware-driven request lifecycle (auth, validation, error handling)
+* Role-based authorization and protected routes
+* Clean separation of concerns between routes, controllers, and middleware
 
--> MongoDB as the NoSQL database for storing user data
+---
 
--> Real-Time Communication: Socket.io for enabling live chat
-    
--> Cron Jobs (e.g., using node-cron) for running scheduled background tasks like sending emails.
+ 📡 Real-Time Communication
 
-Authentication:
+* WebSocket-based chat using Socket.io
+* Persistent bidirectional communication
+* Fallback to HTTP long-polling
 
--> JSON Web Tokens (JWT)
+---
 
-Deployment & Cloud Services:
+ 🤝 Connection System
 
--> AWS EC2 for hosting the application
+* Send / accept / reject connection requests
+* Duplicate request prevention using compound indexing
+* Edge case handling (self-request, invalid IDs, duplicate requests)
+* Relational querying using `ref` and `populate`
 
--> Amazon SES for handling email services
+---
 
+ 📊 Smart Feed Algorithm
 
-## Learning Progress & Backend Concepts Covered
+* Filters out:
 
-1. Project Initialization & Server Setup
-  - Initialized a Node.js project using `npm init`
-  - Understood the role of `package.json` in managing:
-    - Project metadata
-    - Scripts
-    - Dependencies and devDependencies
-  - Created a structured project layout using a `src` directory
-  - Configured `app.js` as the application entry point
-  - Set up an Express server to listen for incoming HTTP requests
+  * Self
+  * Existing connections
+  * Pending/rejected users
+* Pagination support (default: 10, max: 50)
+* Returns only safe user fields (prevents sensitive data exposure)
 
+---
 
-2. Express Server Lifecycle
-  - Imported and instantiated the Express application
-  - Started the server using `app.listen()` on port `7777`
-  - Verified server startup using browser and console logs
-  - Understood the role of the `app.listen()` callback
+ 🗄️ Database Design
 
-3. Development Workflow
-  - Installed and used Nodemon to automatically restart the server during development
-  - Improved development efficiency by eliminating manual restarts
+* MongoDB Atlas with Mongoose ODM
+* Compound indexing for optimized queries
+* Schema validation with custom validators
+* Pre-save middleware for enforcing business rules
+* Automatic timestamps (`createdAt`, `updatedAt`)
+* `runValidators: true` to prevent invalid updates
 
+---
 
-4. REST API Development & Testing
-  - Implemented RESTful APIs using standard HTTP methods:
-    - GET, POST, PUT, PATCH, DELETE
-  - Tested and validated API requests and responses using Postman
-  - Understood request–response lifecycle in Express
+ 🛡️ Error Handling & Reliability
 
- 
-5. Routing & Request Handling
-  - Implemented Express routing for handling client requests
-  - Learned the difference between:
-    - Route (Path) Parameters using `req.params`
-    - Query Parameters using `req.query`
-  - Understood when to use:
-    - Route parameters for resource identification
-    - Query parameters for filtering and optional data
+* Centralized error handling using try-catch in async routes
+* Structured error responses with proper HTTP status codes
+* Graceful handling of:
 
-
-6. Routing, Route Handlers, and Middleware
-  - Learned the concept of routing in Express using `app.get()`, `app.post()`, `app.put()`, `app.patch()`, and `app.delete()`
-  - Understood the role of route handlers in processing incoming requests and sending responses
-  - Differentiated between:
-    - Routes (URL paths)
-    - Route handlers (request-processing logic)
-    - Middleware functions (pre-processing logic)
-  - Used multiple route handlers for a single route to modularize request processing
-  - Applied middleware chaining by wrapping multiple middleware functions in arrays for cleaner and reusable route definitions
-
-
-7. Middleware and the `next()` Function
-  - Implemented custom middleware functions for request processing
-  - Learned when and why to use the `next()` function to:
-    - Pass control to the next middleware
-    - Continue request execution flow
-  - Understood middleware execution order and request lifecycle in Express
-
-
-8. Authorization and Access Control
-  - Implemented authorization logic to restrict access to routes
-  - Differentiated user roles such as:
-    - User
-    - Admin
-  - Protected routes based on role and authentication status
-
-
-9. Route-Level Authorization
-  - Applied middleware selectively to routes such as:
-    - Login
-    - Fetching protected data
-    - Deleting sensitive data
-  - Ensured that only authorized users can access or modify protected resources
-  - Prevented unauthorized access by validating permissions before executing route handlers
-
-
-10. Role-Based Authentication Functions
-  - Created separate authentication functions for different user roles:
-    - User authentication
-    - Admin authentication
-  - Centralized authentication logic to ensure reusability and consistency
-  - Applied role-specific authentication middleware to protect routes based on access level
-  - Ensured that only authorized users can perform privileged operations
-
-11. Error Handling Using Try-Catch
-  - Implemented `try-catch` blocks to handle runtime and asynchronous errors
-  - Prevented application crashes by gracefully handling unexpected failures
-  - Returned meaningful error responses to the client
-  - Improved application stability and debuggability during API execution
-  
-
-12. Database, Schema and Mongoose ODM
-  - Created a MongoDB Atlas cluster to host the database in the cloud
-  - Used MongoDB Compass to view and inspect data stored in MongoDB Atlas
-  - Used Mongoose (ODM) to model data and interact with MongoDB from the Node.js application
-  - Established a database connection before starting the server to ensure the application only listens for requests after successful database connectivity
-  - Implemented a "/signup" API using the HTTP "POST" method to create new users
-  - Used the Mongoose "User" model to interact with the "users" collection
-  - Created a new instance of the "User" model with request data
-  - Persisted the user document to the database using model instance methods
-
-13. Core Backend Concepts Strengthened
-  -JSON vs JavaScript objects
-  -Role of express.json() middleware
-  -Difference between PUT and PATCH
-  -findById vs findOne methods
-  -Proper CRUD abstraction
-  -Clean REST API design principles
-  -Understanding and using Mongoose model methods:
-   create(), save(), find(), findById(), findOne(), findByIdAndUpdate(), findOneAndUpdate(), findByIdAndDelete(), deleteOne().
-
-14. Data Modeling & Schema Design (Mongoose)
-   - Designed data models using Mongoose schemas
-   - Used core schema types:
-     - String
-     - Number
-     - Array
-   - Enabled automatic timestamps (`createdAt`, `updatedAt`) for audit and tracking
-
-15. Data Validation & Sanitization
-   - Enforced schema-level validations to maintain data integrity
-   - Applied:
-     - Required field validation
-     - Length and value constraints
-   - Implemented input sanitization:
-     - Lowercasing emails
-     - Trimming whitespace
-     - Default values for optional fields
-
-16. Custom Schema-Level Validation
-   - Implemented custom validators using the `validator` library:
-     - Email format validation
-     - Strong password enforcement
-     - URL validation for profile images
-     - Enum-based validation for controlled fields like gender
-   - Added meaningful error messages for validation failures
-
-17. Validation During Updates
-   - Enforced validation during update operations using `runValidators: true`
-   - Prevented invalid data from bypassing schema rules during updates
-
-18. API-Level Update Control
-   - Implemented field whitelisting for profile updates
-   - Allowed updates only for non-sensitive fields such as:
-     - firstName, lastName, photoUrl, gender, age, about, skills
-   - Restricted updates to sensitive fields like email and password
-   - Prevented mass assignment vulnerabilities
-
-19. Authentication APIs Implemented
-
-### Signup
-
-   - Created `/signup` endpoint
-   - Added request-level validation for required fields
-   - Enforced schema validation for data integrity
-   - Hashed passwords using **bcrypt** before storing
-   - Handled duplicate email & validation errors properly
-
-### Login
-
-   - Created `/login` endpoint
-   - Validated credentials securely (generic error messages)
-   - Fetched user by emailId
-   - Verified password using **bcrypt.compare**
-   - Returned proper status codes (401 for invalid, 200 for success)
-
-### Key Learnings
-
-   - API validation vs Schema validation (defense-in-depth)
-   - Secure password storage & comparison
-   - Preventing user enumeration attacks
-   - Proper REST error handling
-
-20. JWT Authentication Implemented
-
-   - Installed **jsonwebtoken** and generated JWT token on login
-   - Installed **cookie-parser** and stored token in HTTP cookies
-   - Sent authentication cookie to client after successful login
-   - Created protected `/profile` API
-   - Implemented `userAuth` middleware to verify JWT from cookies
-   - Allowed access to protected routes only for authenticated users
-   - Handled invalid, missing, and expired tokens with proper responses
-   - Implemented Mongoose schema instance methods to encapsulate authentication logic inside the User model.
-   -Added validatePassword() to securely compare user input with the stored bcrypt hash.
-   -Added getJWT() to generate signed JWT tokens with expiration.
-   -Implemented route modularization using express.Router, separating APIs into dedicated route files (auth, profile, request) to improve code structure, readability, and scalability.
-
-22. Implemented a Connection Request API with:
-
-   -Compound indexing for optimized duplicate detection
-   -Mongoose pre("save") middleware for schema-level validation
-   -Proper HTTP status codes (400, 404, 409, 500)
-   -Edge case handling (self-request, invalid ObjectId, duplicate requests)
-   -Structured and consistent error responses
-
-23. Connection Management System
-   - POST `/request/review/:status/:requestId`
-   - GET `/user/requests/received`
-   - GET `/user/connections`
-   - Implemented secure validation and authorization checks
-   - Used Mongoose `ref` and `populate` for relational querying
-   - Applied proper HTTP status codes and structured API responses
-
-24. Implemented a paginated user feed API that intelligently filters and returns relevant profiles for connection.
-
--Excludes irrelevant users from feed
-   -Logged-in user (self)
-   -Existing connections
-   -Users already sent connection requests
-   -Users who ignored/rejected requests
--Pagination Support
-   -Efficient data fetching using page and limit
-   -Default limit: 10 users
-   -Max limit capped at 50 (prevents abuse)
-- Data Sanitization
-   -Only safe user fields are returned using USER_SAFE_DATA
-   -Prevents exposure of sensitive information
-   -Prevents loading lakhs of users at once, reducing:
-      - Response time
-      - Memory usage
-      - Database load
+  * Validation errors
+  * Duplicate key conflicts
+  * Authentication failures
 
+---
 
+ 📡 API Structure
 
+### Auth
+
+* POST `/signup`
+* POST `/login`
+* POST `/logout`
+
+### Profile
+
+* GET `/profile`
+* PATCH `/profile`
+
+### Connections
+
+* POST `/request/send/:status/:userId`
+* POST `/request/review/:status/:requestId`
+
+### User
+
+* GET `/user/feed`
+* GET `/user/connections`
+* GET `/user/requests/received`
+
+---
+
+ ⚙️ Deployment
+
+* AWS EC2 (Ubuntu)
+* Nginx reverse proxy (port forwarding to Node.js)
+* MongoDB Atlas (cloud database)
+* Amazon SES for transactional emails
+* node-cron for background job scheduling
+
+---
+
+ 🛠️ Tech Stack
+
+* Node.js, Express.js
+* MongoDB, Mongoose
+* Socket.io
+* JWT, bcrypt
+* AWS EC2, Nginx, SES
+
+---
+
+ 🎯 Summary
+
+This project demonstrates:
+
+* Scalable backend API design
+* Secure authentication & authorization
+* Real-time system implementation
+* Efficient database querying & indexing
+* Production-ready deployment practices
