@@ -4,6 +4,7 @@ const { userAuth } = require("../middlewares/auth");
 const { validateEditProfileData } = require("../utils/validation");
 
 const USER_SAFE_FIELDS = [
+  "_id",
   "firstName",
   "lastName",
   "photoUrl",
