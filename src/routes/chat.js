@@ -1,8 +1,9 @@
-const express=require("express");
-const {Chat}  = require("../models/chat");
+const express = require("express");
+const { Chat } = require("../models/chat");
 const { userAuth } = require("../middlewares/auth");
+const ConnectionRequest = require("../models/connectionRequest");
 
-const chatRouter=express.Router();
+const chatRouter = express.Router();
 
 chatRouter.get("/chat/:targetUserId", userAuth, async (req, res) => {
   const { targetUserId } = req.params;
@@ -12,7 +13,33 @@ chatRouter.get("/chat/:targetUserId", userAuth, async (req, res) => {
     return res.status(400).json({ error: "Invalid user IDs" });
   }
 
+  if (userId.equals(targetUserId)) {
+    return res.status(400).json({
+      error: "Cannot chat with yourself",
+    });
+  }
+
   try {
+    const connection = await ConnectionRequest.findOne({
+      $or: [
+        {
+          fromUserId: userId,
+          toUserId: targetUserId,
+          status: "accepted",
+        },
+        {
+          fromUserId: targetUserId,
+          toUserId: userId,
+          status: "accepted",
+        },
+      ],
+    });
+
+    if (!connection) {
+      return res.status(403).json({
+        error: "You are not connected with this user",
+      });
+    }
     let chat = await Chat.findOne({
       participants: { $all: [userId, targetUserId] },
     }).populate({
@@ -34,5 +61,4 @@ chatRouter.get("/chat/:targetUserId", userAuth, async (req, res) => {
   }
 });
 
-
-module.exports=chatRouter;
+module.exports = chatRouter;

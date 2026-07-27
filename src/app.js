@@ -13,7 +13,7 @@ app.use(
   cors({
     origin: ["http://localhost:5173", "https://thedevconnect.in"],
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
@@ -47,4 +47,5 @@ connectDB()
   })
   .catch((err) => {
     console.error("Database cannnot be connected");
+    console.error(err.message);
   });
